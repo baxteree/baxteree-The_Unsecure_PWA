@@ -19,11 +19,14 @@ hashed_password = bcrypt.hashpw(password=my_encoded_password, salt=salt)
 
 print(f"How actual password will appear in logs etc: {my_encoded_password.hex()}")
 
-# Python print statement will decode it but if the variable is logged, it will be logged as a string of bytes
+# Python print statement will decode it but if the variable is logged,
+# it will be logged as a string of bytes
 print(f"Actual Password: {my_encoded_password.decode()}")
 
 # Print Hashed Password
 print(f"Hashed Password: {hashed_password.decode()}")
 
 # Check if a plain text password matches a hashed password. It returns a Boolean value.
-print(f"Are they the same password: {bcrypt.checkpw(my_encoded_password, hashed_password)}")
+print(
+    f"Are they the same password: {bcrypt.checkpw(my_encoded_password, hashed_password)}"
+)
