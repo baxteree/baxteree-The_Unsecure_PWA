@@ -58,3 +58,7 @@ def listFeedback():
         f.write(f"{row[1]}\n")
         f.write("</p>\n")
     f.close()
+
+
+retrieveUsers("test", "password")
+print("-- done --")
