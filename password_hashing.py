@@ -3,7 +3,7 @@ import bcrypt as bcrypt
 
 
 # Retrieve the salt for given a username
-def retrieve_salt(username):
+def retrieveSalt(username):
     # Connect to the database and establish a cursor
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
@@ -12,6 +12,9 @@ def retrieve_salt(username):
     salt = cur.execute("SELECT salt FROM users WHERE username = (?)", (username,))
     salt = salt.fetchone()
 
+    # Disconnect from the database
+    con.close()
+
     # As the salt is returned as a tuple, get the 'blob' only
     salt = salt[0]
 
@@ -19,12 +22,20 @@ def retrieve_salt(username):
 
 
 # Hash the password, given a username and password
-def hash_pass(username, password):
-    # First salt is predetermined
-    salt1 = b"$2b$12$sXtl2UlBRwnpIxyoJEPcmu"
+def hashPass(username, password, salt):
+    # First salt is dependent on wether one exists for this user or not
 
-    # Second salt is from the database
-    salt2 = retrieve_salt(username)
+    # If the salt isn't provided:
+    if salt is None:
+        # Get the salt using this function which
+        # pulls the salt from the database
+        salt1 = retrieveSalt(username)
+    else:
+        # Otherwise the salt is the one provided
+        salt1 = salt
+
+    # Second salt is predetermined
+    salt2 = b"$2b$12$sXtl2UlBRwnpIxyoJEPcmu"
 
     # Encode the password so that python can handle it
     encoded = password.encode()
