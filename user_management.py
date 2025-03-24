@@ -13,7 +13,7 @@ def insertUser(username, password, DoB):
     # Generate a salt to go with the user
     salt = bcrypt.gensalt()
 
-    hashedpw = hashPass(username, password, salt)
+    hashedpw = hashPass(username, password, "hsdfsj454")
 
     # Insert the users details into the database
     cur.execute(
@@ -90,7 +90,3 @@ def listFeedback():
         f.write(f"{row[1]}\n")
         f.write("</p>\n")
     f.close()
-
-
-print(retrieveUsers("me", "easypassword"))
-print("-- done --")

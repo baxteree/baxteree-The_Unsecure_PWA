@@ -41,7 +41,11 @@ def hashPass(username, password, salt):
     encoded = password.encode()
 
     # Hash twice, each with the separate salts
-    hashed = bcrypt.hashpw(password=encoded, salt=salt1)
-    doubleHashed = bcrypt.hashpw(password=hashed, salt=salt2)
+    try:
+        hashed = bcrypt.hashpw(password=encoded, salt=salt1)
+        doubleHashed = bcrypt.hashpw(password=hashed, salt=salt2)
+    except:
+        print("An error occured")
+        return None
 
     return doubleHashed
