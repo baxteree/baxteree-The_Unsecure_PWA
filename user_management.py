@@ -13,7 +13,7 @@ def insertUser(username, password, DoB):
     # Generate a salt to go with the user
     salt = bcrypt.gensalt()
 
-    hashedpw = hashPass(username, password, "hsdfsj454")
+    hashedpw = hashPass(username, password, salt)
 
     # Insert the users details into the database
     cur.execute(
@@ -74,7 +74,7 @@ def retrieveUsers(username, password):
 def insertFeedback(feedback):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
-    cur.execute("INSERT INTO feedback (feedback) VALUES ('(?)')", (feedback,))
+    cur.execute("INSERT INTO feedback (feedback) VALUES (?)", (feedback,))
     con.commit()
     con.close()
 

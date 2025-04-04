@@ -37,7 +37,7 @@ def check_password(password: str) -> bytes:
     if len(password) < 8:
         raise ValueError("less than 8 characters")
     if len(password) > 20:
-        raise ValueError("more than 10 characters")
+        raise ValueError("more than 20 characters")
     if re.search(r"[ ]", password):
         raise ValueError("contains ' ' space characters")
     if not re.search(r"[A-Z]", password):
