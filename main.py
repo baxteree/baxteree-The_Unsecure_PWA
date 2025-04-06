@@ -2,7 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import redirect
-from data_handler import checkpw_2, make_web_safe
+from data_handler import checkpw_2
 import user_management as dbHandler
 import logging
 
@@ -38,19 +38,27 @@ def signup():
         username = request.form["username"]
         password = request.form["password"]
         DoB = request.form["dob"]
+
         try:
+            # Check if the user entered a valid password
             strong_password = checkpw_2(password)
         except TypeError:
             logger.error(f"Type errors for password: {password}")
             print("TypeError has been logged")
             return render_template("/signup.html")
+
         except ValueError as inst:
+            # If not, return an error message explaining why it was invalid
             print(f"Not a valid password because it {inst.args}.")
+            
+            # Reload the signup page, with the form cleared
             return render_template("/signup.html")
         except Exception as inst:
             print(f"Log as a {type(inst)}")
             return render_template("/signup.html")
         else:
+            # Otherwise if the password is valid, 
+            # insert the user into the database
             dbHandler.insertUser(username, strong_password, DoB)
 
         return render_template("/index.html")

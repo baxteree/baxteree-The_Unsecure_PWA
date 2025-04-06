@@ -44,7 +44,8 @@ def hashPass(username, password, salt):
     try:
         hashed = bcrypt.hashpw(password=encoded, salt=salt1)
         doubleHashed = bcrypt.hashpw(password=hashed, salt=salt2)
-    except:
+    except TypeError:
+        # This general error statement is printed if the salt is invalid
         print("An error occured")
         return None
 
