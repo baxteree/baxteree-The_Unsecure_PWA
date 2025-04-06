@@ -3,6 +3,7 @@ import time
 import random
 from password_hashing import hashPass
 import bcrypt
+from data_handler import make_web_safe
 
 
 def insertUser(username, password, DoB):
@@ -10,18 +11,23 @@ def insertUser(username, password, DoB):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
+    # Make the inputs safe
+    safe_user = make_web_safe(username)
+    safe_pass = make_web_safe(password)
+    safe_DoB = make_web_safe(DoB)
+
     # Generate a salt to go with the user
     salt = bcrypt.gensalt()
 
-    hashedpw = hashPass(username, password, salt)
+    hashedpw = hashPass(safe_user, safe_pass, salt)
 
     # Insert the users details into the database
     cur.execute(
         "INSERT INTO users (username,password,dateOfBirth,salt) VALUES (?,?,?,?)",
         (
-            username,
+            safe_user,
             hashedpw,
-            DoB,
+            safe_DoB,
             salt,
         ),
     )
@@ -47,8 +53,12 @@ def retrieveUsers(username, password):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
+    # Make the inputs safe
+    safe_user = make_web_safe(username)
+    safe_pass = make_web_safe(password)
+
     # Select the user with the specified username
-    cur.execute("SELECT * FROM users WHERE username = (?)", (username,))
+    cur.execute("SELECT * FROM users WHERE username = (?)", (safe_user,))
 
     # If the specified username is not in the database
     if cur.fetchone() is None:
@@ -58,7 +68,7 @@ def retrieveUsers(username, password):
 
     # If this point is reached, the user exists
     else:
-        hashedpw = hashPass(username, password, None)
+        hashedpw = hashPass(safe_user, safe_pass, None)
         cur.execute("SELECT * FROM users WHERE password = (?)", (hashedpw,))
 
         manageBackend()
@@ -74,7 +84,10 @@ def retrieveUsers(username, password):
 def insertFeedback(feedback):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
-    cur.execute("INSERT INTO feedback (feedback) VALUES (?)", (feedback,))
+
+    # Make the feedback safe
+    safe_feedback = make_web_safe(feedback)
+    cur.execute("INSERT INTO feedback (feedback) VALUES (?)", (safe_feedback,))
     con.commit()
     con.close()
 

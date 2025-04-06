@@ -2,7 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import redirect
-from data_handler import checkpw_2
+from data_handler import checkpw_2, make_web_safe
 import user_management as dbHandler
 import logging
 
@@ -41,11 +41,11 @@ def signup():
         try:
             strong_password = checkpw_2(password)
         except TypeError:
-            logger.error(f"Type errors for password:{password}")
+            logger.error(f"Type errors for password: {password}")
             print("TypeError has been logged")
             return render_template("/signup.html")
         except ValueError as inst:
-            print(f"Not a valid password because it has {inst.args}.")
+            print(f"Not a valid password because it {inst.args}.")
             return render_template("/signup.html")
         except Exception as inst:
             print(f"Log as a {type(inst)}")
